@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 광장</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .write-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .write-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .sort-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .sort-section h2 {
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-btn {
+            padding: 8px 16px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .sort-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .sort-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .comment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .comment-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .comment-card.top-comment {
+            border: 3px solid #ffd700;
+            background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+        }
+
+        .top-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .author-info h3 {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .author-info span {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        .comment-content {
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .like-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .like-btn:hover {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .like-btn.liked {
+            border-color: #e74c3c;
+            background: #e74c3c;
+            color: white;
+        }
+
+        .like-btn .heart {
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .like-btn:hover .heart {
+            transform: scale(1.2);
+        }
+
+        .like-btn.liked .heart {
+            animation: heartBeat 0.5s ease;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .delete-btn {
+            padding: 8px 12px;
+            border: none;
+            background: #f0f0f0;
+            color: #999;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .sort-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .comment-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💬 댓글 광장</h1>
+            <p>자유롭게 의견을 나누고 공감해주세요</p>
+            <div class="stats">
+                <div class="stat-item">📝 총 댓글 <strong id="totalComments">0</strong>개</div>
+                <div class="stat-item">❤️ 총 좋아요 <strong id="totalLikes">0</strong>개</div>
+            </div>
+        </header>
+
+        <section class="write-section">
+            <h2>✏️ 댓글 작성</h2>
+            <div class="input-group">
+                <label for="nickname">닉네임</label>
+                <input type="text" id="nickname" placeholder="닉네임을 입력하세요" maxlength="20">
+            </div>
+            <div class="input-group">
+                <label for="content">내용</label>
+                <textarea id="content" placeholder="댓글을 입력하세요..." maxlength="500"></textarea>
+                <div class="char-count"><span id="charCount">0</span>/500</div>
+            </div>
+            <button class="submit-btn" onclick="addComment()">댓글 등록</button>
+        </section>
+
+        <div class="sort-section">
+            <h2>📋 댓글 목록</h2>
+            <div class="sort-buttons">
+                <button class="sort-btn active" onclick="sortComments('likes')" id="sortLikes">🔥 인기순</button>
+                <button class="sort-btn" onclick="sortComments('latest')" id="sortLatest">🕐 최신순</button>
+            </div>
+        </div>
+
+        <div class="comments-list" id="commentsList">
+            <!-- 댓글이 여기에 표시됩니다 -->
+        </div>
+    </div>
+
+    <script>
+        // 로컬 스토리지에서 댓글 불러오기
+        let comments = JSON.parse(localStorage.getItem('comments')) || [];
+        let currentSort = 'likes';
+        let likedComments = JSON.parse(localStorage.getItem('likedComments')) || [];
+
+        // 글자 수 카운터
+        document.getElementById('content').addEventListener('input', function() {
+            document.getElementById('charCount').textContent = this.value.length;
+        });
+
+        // 댓글 추가
+        function addComment() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const content = document.getElementById('content').value.trim();
+
+            if (!nickname) {
+                alert('닉네임을 입력해주세요!');
+                return;
+            }
+
+            if (!content) {
+                alert('댓글 내용을 입력해주세요!');
+                return;
+            }
+
+            const comment = {
+                id: Date.now(),
+                nickname: nickname,
+                content: content,
+                likes: 0,
+                timestamp: new Date().toISOString()
+            };
+
+            comments.unshift(comment);
+            saveComments();
+            renderComments();
+
+            // 입력 필드 초기화
+            document.getElementById('content').value = '';
+            document.getElementById('charCount').textContent = '0';
+        }
+
+        // 좋아요 토글
+        function toggleLike(commentId) {
+            const comment = comments.find(c => c.id === commentId);
+            const likedIndex = likedComments.indexOf(commentId);
+
+            if (likedIndex === -1) {
+                // 좋아요 추가
+                comment.likes++;
+                likedComments.push(commentId);
+            } else {
+                // 좋아요 취소
+                comment.likes--;
+                likedComments.splice(likedIndex, 1);
+            }
+
+            localStorage.setItem('likedComments', JSON.stringify(likedComments));
+            saveComments();
+            renderComments();
+        }
+
+        // 댓글 삭제
+        function deleteComment(commentId) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                comments = comments.filter(c => c.id !== commentId);
+                saveComments();
+                renderComments();
+            }
+        }
+
+        // 정렬 변경
+        function sortComments(type) {
+            currentSort = type;
+            
+            document.getElementById('sortLikes').classList.remove('active');
+            document.getElementById('sortLatest').classList.remove('active');
+            
+            if (type === 'likes') {
+                document.getElementById('sortLikes').classList.add('active');
+            } else {
+                document.getElementById('sortLatest').classList.add('active');
+            }
+            
+            renderComments();
+        }
+
+        // 댓글 저장
+        function saveComments() {
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        // 댓글 렌더링
+        function renderComments() {
+            const list = document.getElementById('commentsList');
+            
+            // 정렬
+            let sortedComments = [...comments];
+            if (currentSort === 'likes') {
+                sortedComments.sort((a, b) => b.likes - a.likes);
+            } else {
+                sortedComments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            }
+
+            // 통계 업데이트
+            document.getElementById('totalComments').textContent = comments.length;
+            document.getElementById('totalLikes').textContent = comments.reduce((sum, c) => sum + c.likes, 0);
+
+            if (sortedComments.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">💭</div>
+                        <p>아직 댓글이 없습니다.<br>첫 번째 댓글을 남겨보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 최고 좋아요 댓글 찾기
+            const maxLikes = Math.max(...sortedComments.map(c => c.likes));
+
+            list.innerHTML = sortedComments.map((comment, index) => {
+                const isLiked = likedComments.includes(comment.id);
+                const isTop = currentSort === 'likes' && index === 0 && comment.likes > 0 && comment.likes === maxLikes;
+                const initial = comment.nickname.charAt(0).toUpperCase();
+                const timeAgo = getTimeAgo(comment.timestamp);
+
+                return `
+                    <div class="comment-card ${isTop ? 'top-comment' : ''}">
+                        ${isTop ? '<div class="top-badge">👑 BEST</div>' : ''}
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <div class="avatar">${initial}</div>
+                                <div class="author-info">
+                                    <h3>${escapeHtml(comment.nickname)}</h3>
+                                    <span>${timeAgo}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="comment-content">${escapeHtml(comment.content)}</p>
+                        <div class="comment-actions">
+                            <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${comment.id})">
+                                <span class="heart">${isLiked ? '❤️' : '🤍'}</span>
+                                <span>${comment.likes}</span>
+                            </button>
+                            <button class="delete-btn" onclick="deleteComment(${comment.id})">삭제</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 시간 표시 변환
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const past = new Date(timestamp);
+            const diff = Math.floor((now - past) / 1000);
+
+            if (diff < 60) return '방금 전';
+            if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)}일 전`;
+            
+            return past.toLocaleDateString('ko-KR');
+        }
+
+        // HTML 이스케이프
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 초기 렌더링
+        renderComments();
+
+        // Enter 키로 댓글 등록 (Shift+Enter는 줄바꿈)
+        document.getElementById('content').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addComment();
+            }
+        });
+    </script>
+</body>
+</html>
