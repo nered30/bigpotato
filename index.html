@@ -11,6 +11,29 @@
 </div>
 
 <p>배경음악이 재생 중입니다. (브라우저 정책에 따라 음소거로 시작될 수 있습니다.)</p>
+    <div id="player" style="display:none;"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '0',
+      width: '0',
+      videoId: 'SiQYxXFLDT0', // 대홍단 감자 ID
+      playerVars: { 'autoplay': 1, 'mute': 1, 'loop': 1, 'playlist': 'SiQYxXFLDT0' },
+      events: {
+        'onReady': (event) => {
+          event.target.playVideo();
+          // 사용자가 화면 아무데나 클릭하면 음소거 해제
+          window.addEventListener('click', () => {
+            player.unMute();
+          }, { once: true });
+        }
+      }
+    });
+  }
+</script>
     <style>
         * {
             margin: 0;
