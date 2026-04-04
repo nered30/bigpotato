@@ -353,16 +353,16 @@
 <body>
     <div class="container">
         <header>
-            <h1>💬 댓글 광장</h1>
+            <h1>댓글들</h1>
             <p>자유롭게 의견을 나누고 공감해주세요</p>
             <div class="stats">
-                <div class="stat-item">📝 총 댓글 <strong id="totalComments">0</strong>개</div>
-                <div class="stat-item">❤️ 총 좋아요 <strong id="totalLikes">0</strong>개</div>
+                <div class="stat-item"> 총 댓글 <strong id="totalComments">0</strong>개</div>
+                <div class="stat-item"> 총 좋아요 <strong id="totalLikes">0</strong>개</div>
             </div>
         </header>
 
         <section class="write-section">
-            <h2>✏️ 댓글 작성</h2>
+            <h2>댓글 작성</h2>
             <div class="input-group">
                 <label for="nickname">닉네임</label>
                 <input type="text" id="nickname" placeholder="닉네임을 입력하세요" maxlength="20">
@@ -376,7 +376,7 @@
         </section>
 
         <div class="sort-section">
-            <h2>📋 댓글 목록</h2>
+            <h2>목록</h2>
             <div class="sort-buttons">
                 <button class="sort-btn active" onclick="sortComments('likes')" id="sortLikes">🔥 인기순</button>
                 <button class="sort-btn" onclick="sortComments('latest')" id="sortLatest">🕐 최신순</button>
@@ -518,7 +518,7 @@
 
                 return `
                     <div class="comment-card ${isTop ? 'top-comment' : ''}">
-                        ${isTop ? '<div class="top-badge">👑 BEST</div>' : ''}
+                        ${isTop ? '<div class="top-badge"></div>' : ''}
                         <div class="comment-header">
                             <div class="comment-author">
                                 <div class="avatar">${initial}</div>
